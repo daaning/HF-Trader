@@ -1,4 +1,3 @@
- 
 import json
 config = json.load(open('Config.json'))
 
@@ -27,11 +26,9 @@ maxstakes = 5
 # if your strategy doesnt sell without profit set minimum Return of investment
 minROI = 1.01 # minimum ROI in % * 100 on selling with stoploss
 
-
 # twitter 
-
-twitterkey = ""
-twittersecret = ""
-tokenkey = ""
-tokensecret = ""
+twitter_key = config['twitter_key']
+twitter_secret = config['twitter_secret']
+twitter_tokenkey = config['twitter_tokenkey']
+twitter_tokensecret = config['twitter_tokensecret']
 
