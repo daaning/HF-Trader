@@ -46,37 +46,53 @@ def get_data(i, rep):
 
 # get historical data timeframe in Client.KLINE_INTERVAL_5MINUTE format 
 def get_historical_data(market, from_time):
-    data = client.get_historical_klines(market, timeframe, from_time)
-    return data
-
+    
+    try:
+        data = client.get_historical_klines(market, timeframe, from_time)
+        return data
+    except:
+        print ("Api not responding")
 
 # get market price of selected market
 def get_price_now(market):
-    value = client.get_ticker(symbol=market)
-    return value['lastPrice']
-
+    
+    try:
+        value = client.get_ticker(symbol=market)
+        return value['lastPrice']
+    except:
+        print ("Api not responding")
 
 #market buy and sell, price is exaclty marketprice automatically 
 def market_buy(market, quant):
-    order = client.order_market_buy(
-        symbol= market,
-        quantity= quant
-    )
-def market_sell(market, quant):
-    order = client.order_market_sell(
-        symbol= market,
-        quantity= quant
-    )
+    try:
+        order = client.order_market_buy(
+            symbol= market,
+            quantity= quant
+        )
+        return True
+    except:
+        print ("Buying failed")
+        return False
 
+
+def market_sell(market, quant):
+    try:
+        order = client.order_market_sell(
+            symbol= market,
+            quantity= quant
+        )
+        return True
+    except:
+        print("Selling failed"
+        return False)
 
 #check all balances in wallet
 def wallet_balance():
-    status = client.get_account()
-    bal = status['balances']
-    for l in range(len(bal)):
-        if float(bal[l]['free']) > 0.0001:
-            print (bal[l])
-
-
-
-# blaa blaa dfafdafdfa
+    try:
+        status = client.get_account()
+        bal = status['balances']
+        for l in range(len(bal)):
+            if float(bal[l]['free']) > 0.0001:
+                print (bal[l])
+    except:
+        print("Getting wallet from api failed or your really broke haaah")
