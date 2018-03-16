@@ -1,7 +1,9 @@
 import Settings
 import BinanceAPI
+import Strategy
 lenmarket = len(Settings.tradewith)
 timeframe = Settings.timeframe
+import time
 """
 def main():
     database.make()
@@ -13,11 +15,21 @@ def main():
 """
 
 def main():
-    
     for ma in range(1000):
         status = itter()
-        print (BinanceAPI.get_data(status[0], status[1]))
-        
+        i = status[0]
+        rep = status[1]
+        loopdone = [2]
+
+        data = BinanceAPI.get_data(i, rep)
+        judgement = Strategy.run(i, rep, loopdone, data)
+        print (judgement)
+
+        if loopdone:
+            time.sleep(Settings.timeframe)
+
+
+
 
 i = -1
 rep = 0
