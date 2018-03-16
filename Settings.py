@@ -1,3 +1,4 @@
+dicks 
 import json
 config = json.load(open('Config.json'))
 
