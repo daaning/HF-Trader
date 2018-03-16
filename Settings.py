@@ -1,4 +1,4 @@
-dicks 
+d 
 import json
 config = json.load(open('Config.json'))
 
