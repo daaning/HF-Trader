@@ -22,7 +22,7 @@ def main():
         loopdone = [2]
 
         data = BinanceAPI.get_data(i, rep)
-        judgement = Strategy.run(i, rep, loopdone, data)
+        judgement = Strategy.last_line(i, data)
         print (judgement)
 
         if loopdone:
