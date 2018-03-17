@@ -1,4 +1,5 @@
 from binance.client import Client
+from binance.exceptions import BinanceAPIException
 import Main
 import Settings
 import pandas as pd
@@ -11,7 +12,7 @@ lenmarket = len(Settings.tradewith)
 client = Client(Settings.key, Settings.secret)
 tradewith = Settings.tradewith
 tradecurrency = Settings.tradecurrency
-timeframe = Settings.interval
+timeframes = Settings.timeframes
 
 
 #dictionairies and arrays for pandas are being made
@@ -24,24 +25,31 @@ dicts = [{} for dic in range(len(markets))]
 df = ["df"+str(m) for m in range(len(markets))]
 for n in range(lenmarket):
     df[n] = pd.DataFrame(dicts[n], columns=['timestamp', 'close'])
+dataArray = [[] for da in range(len(timeframes))]
 
 
 # get candle data binance, and calculate stockstats for a set timeframe
-def get_data(i, rep):
-
-    try:
-        dataArray = client.get_klines(symbol=markets[i], interval=Client.KLINE_INTERVAL_1MINUTE)
-        for y in range(len(dataArray)):
-            df[i].loc[y] = [dataArray[y][0], dataArray[y][4]]
-        
-    except:
-            print ("API not responding")
-
-    stock_df = stockstats.StockDataFrame.retype(df[i])
-    df[i]['macd'] = stock_df.get('macd')
-    df[i]['rsi'] = stock_df.get('rsi')
+def get_data(time, currency, rep):
     
-    return df[i]
+    if time == 0:
+        dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1HOUR)
+    elif time == 1:
+        dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_30MINUTE)
+    elif time == 2:
+        dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_5MINUTE)
+    elif time == 3:
+        dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1MINUTE)
+
+    for y in range(len(dataArray)):
+        df[currency].loc[y] = [dataArray[y][0], dataArray[y][4]]
+
+    stock_df = stockstats.StockDataFrame.retype(df[currency])
+    df[currency]['macd'] = stock_df.get('macd')
+    df[currency]['rsi'] = stock_df.get('rsi')
+    
+    return df[currency]
+
+
 
 
 # get historical data timeframe in Client.KLINE_INTERVAL_5MINUTE format 
@@ -83,8 +91,8 @@ def market_sell(market, quant):
         )
         return True
     except:
-        print("Selling failed"
-        return False)
+        print("Selling failed")
+        return False
 
 #check all balances in wallet
 def wallet_balance():

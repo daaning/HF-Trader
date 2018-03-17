@@ -23,6 +23,6 @@ def all_lines(i, data):
     for index, row in data.iterrows():
         last_line = markets[i], index, row[output1], row[output2]
         all_lines.append(last_line)
-    return last_line
+    return all_lines
     
         

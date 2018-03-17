@@ -14,7 +14,8 @@ tradewith = ["ETH",
              "XMR"]
 
 # Timeframe: 1MINUTE 3MINUTE, 5MINUTE, 15MINUTE, 30MINUTE, 1HOUR
-interval = "Client.KLINE_INTERVAL_1MINUTE"
+timeframes = ["KLINE_INTERVAL_1HOUR", "Client.KLINE_INTERVAL_30MINUTE",
+              "Client.KLINE_INTERVAL_5MINUTE", "Client.KLINE_INTERVAL_1MINUTE"]
 timeframe = 10 # timeframe in seconds for the loop to check for data
 
 # stake amount in tradecurrency
