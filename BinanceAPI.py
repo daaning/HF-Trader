@@ -28,7 +28,7 @@ df = [[[] for x in range(lenmarket)] for y in range(4)]
 def initiate():
     for ma in range(4):
         for ti in range(lenmarket):
-            df[ma][ti] = pd.DataFrame(dicts, columns=[markets[ti], 'open', 'high', 'low', 'close', 'volume'])
+            df[ma][ti] = pd.DataFrame(dicts, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
 initiate()
 
 

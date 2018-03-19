@@ -8,6 +8,6 @@ def make_stockstats(df):
         df.close, fastperiod=12, slowperiod=26, signalperiod=9)
     df['RSI'] = ta.RSI(df.close, timeperiod=14)
     
-
     return df
+    
 
