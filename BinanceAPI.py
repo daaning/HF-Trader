@@ -7,27 +7,27 @@ import stockstats
 import logging
 import time
 
+
 #get all the settings from settings
 lenmarket = len(Settings.tradewith)
 client = Client(Settings.key, Settings.secret)
 tradewith = Settings.tradewith
-tradecurrency = Settings.tradecurrency
-timeframes = Settings.timeframes
+tradecurrency = Settings.tradecurrency 
+lentimeframes = len(Settings.timeframes)
 
-
-#dictionairies and arrays for pandas are being made
 markets = []
 for m in range(lenmarket):
     markets.append(tradewith[m] + tradecurrency)
 
-#make pandas dataframes for all the whitelisted currencies
-dicts = [{} for dic in range(len(markets))]
-df = ["df"+str(m) for m in range(len(markets))]
-for n in range(lenmarket):
-    df[n] = pd.DataFrame(dicts[n], columns=['timestamp', 'close'])
-dataArray = [[] for da in range(len(timeframes))]
-
-
+# making a 2d array of pandas dataframes for all the whitelisted currencies and timeframes
+dicts = {}
+df = [[[] for x in range(lenmarket)] for y in range(4)] 
+for ma in range(4):
+    for ti in range(lenmarket):
+        df[ma][ti] = pd.DataFrame(dicts, columns=['timestamp', 'close'])
+        
+         
+       
 # get candle data binance, and calculate stockstats for a set timeframe
 def get_data(time, currency, rep):
     
@@ -41,15 +41,9 @@ def get_data(time, currency, rep):
         dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1MINUTE)
 
     for y in range(len(dataArray)):
-        df[currency].loc[y] = [dataArray[y][0], dataArray[y][4]]
-
-    stock_df = stockstats.StockDataFrame.retype(df[currency])
-    df[currency]['macd'] = stock_df.get('macd')
-    df[currency]['rsi'] = stock_df.get('rsi')
+        df[time][currency].loc[y] = [dataArray[y][0], dataArray[y][4]]
     
-    return df[currency]
-
-
+    return df[time][currency]
 
 
 # get historical data timeframe in Client.KLINE_INTERVAL_5MINUTE format 
@@ -63,7 +57,6 @@ def get_historical_data(market, from_time):
 
 # get market price of selected market
 def get_price_now(market):
-    
     try:
         value = client.get_ticker(symbol=market)
         return value['lastPrice']

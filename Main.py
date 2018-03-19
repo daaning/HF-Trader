@@ -16,12 +16,10 @@ def main():
         loopdone = [3]
 
         data = BinanceAPI.get_data(time, currency, rep)
-
+        print data
         
 
-        print data
-
-time = 0
+time = -1
 currency = 0
 rep = 0
 
@@ -32,9 +30,11 @@ def itter():
     loopdone = False
 
     time += 1
-    if time == len(timeframes):
+    if time == 4:
         currency += 1
+        time = 0
         if currency == lenmarkets:
+            currency = 0
             rep += 1
             loopdone = True
 
