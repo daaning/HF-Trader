@@ -2,6 +2,7 @@ import Settings
 import BinanceAPI
 import Strategy
 import time
+import Stockstats
 
 timeframes = Settings.timeframes
 lenmarkets = len(Settings.tradewith)
@@ -16,7 +17,8 @@ def main():
         loopdone = [3]
 
         data = BinanceAPI.get_data(time, currency, rep)
-        print data
+        data2 = Stockstats.make_stockstats(data)
+        print(data2)
         
 
 time = -1
@@ -39,7 +41,6 @@ def itter():
             loopdone = True
 
     return time, currency, rep, loopdone
-
 
 
 
