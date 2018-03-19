@@ -20,16 +20,19 @@ markets = []
 for m in range(lenmarket):
     markets.append(tradewith[m] + tradecurrency)
 
+
 # making a 2d array of pandas dataframes for all the whitelisted currencies and timeframes
 dicts = {}
 df = [[[] for x in range(lenmarket)] for y in range(4)] 
-for ma in range(4):
-    for ti in range(lenmarket):
-        df[ma][ti] = pd.DataFrame(dicts, columns=[markets[ti], 'open', 'high', 'low', 'close', 'volume'])
-        
-         
+def initiate():
+    for ma in range(4):
+        for ti in range(lenmarket):
+            
+            df[ma][ti] = pd.DataFrame(dicts, columns=[markets[ti], 'open', 'high', 'low', 'close', 'volume'])
+initiate()
+
 # get candle data binance, and calculate stockstats for a set timeframe
-def get_data(time, currency, rep):
+def get_data(time, currency, rep, loopdone):
     try:
         if time == 0:
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1HOUR)

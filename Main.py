@@ -11,14 +11,19 @@ lenmarkets = len(Settings.tradewith)
 def main():
     for loop in range(1000):
         status = itter()
+        print (status)
         time = status[0]
         currency = status [1]
         rep = status[2]
-        loopdone = [3]
+        loopdone = status[3]
 
-        data = BinanceAPI.get_data(time, currency, rep)
+        if loopdone:
+            BinanceAPI.initiate()
+
+        data = BinanceAPI.get_data(time, currency, rep, loopdone)
         data2 = Stockstats.make_stockstats(data)
-        print(data2)
+        
+        
         
 
 time = -1
