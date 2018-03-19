@@ -36,7 +36,7 @@ def update_db(last_line, time, currency):
     if last_in_db[0] != last_in_pd[0]:
         values = last_in_pd
         c.execute('''INSERT INTO %r VALUES(?,?,?,?,?,?,?,?,?,?)''' %(
-            databases[time + currency * lenmarket]))
+            databases[time + currency * lenmarket]), values)
         conn.commit()
 
 
