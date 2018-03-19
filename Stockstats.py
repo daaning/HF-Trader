@@ -2,11 +2,10 @@ import talib as ta
 import numpy
 
 
-def make_stockstats(data):
+def make_stockstats(df):
     
-    df = data
-    df['EMA_32']= ta.EMA(df.close, timeperiod=32)
     df['MACD'], df["signal"], df['histogram'] = ta.MACD(
         df.close, fastperiod=12, slowperiod=26, signalperiod=9)
+    df['RSI'] = ta.RSI(df.close, timeperiod=14)
 
     return df
