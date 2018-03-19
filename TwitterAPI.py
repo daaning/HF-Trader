@@ -31,5 +31,6 @@ def get_sentiment(i):
         polarr[i].append(sentiment[0])
         sentarr[i].append(sentiment[1])
 
+
     return np.average(polarr[i]), np.average(sentarr[i])
 

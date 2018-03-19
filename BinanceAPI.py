@@ -31,6 +31,7 @@ def initiate():
             df[ma][ti] = pd.DataFrame(dicts, columns=[markets[ti], 'open', 'high', 'low', 'close', 'volume'])
 initiate()
 
+
 # get candle data binance, and calculate stockstats for a set timeframe
 def get_data(time, currency, rep, loopdone):
     try:

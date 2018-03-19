@@ -16,7 +16,6 @@ def main():
         currency = status [1]
         rep = status[2]
         loopdone = status[3]
-
         if loopdone:
             BinanceAPI.initiate()
 

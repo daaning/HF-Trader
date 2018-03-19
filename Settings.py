@@ -4,6 +4,7 @@ these are the settings you have to set before trading
 
 """
 
+
 # set your trade currency
 tradecurrency = "BTC"
 
