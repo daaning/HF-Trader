@@ -24,20 +24,18 @@ def main():
 
     while True:
         status = itter()
+        print (status)
         time = status[0]
         currency = status [1]
         rep = status[2]
-        loopdone = [3]
+        loopdone = status[3]
+        if loopdone:
+            BinanceAPI.initiate()
 
-        data = BinanceAPI.get_data(time, currency, rep)
-        print(20*"#"+"Binance data"+20*"#")
-        print(data)
-        write_df_to_mongoDB(data)
-
+        data = BinanceAPI.get_data(time, currency, rep, loopdone)
         data2 = Stockstats.make_stockstats(data)
-        print(20*"#"+"Stockstats data"+20*"#")
 
-        print(data2)
+
         
 
 time = -1
