@@ -16,6 +16,7 @@ def main():
     print("Starting main process")
     Database.create_db()
     while True:
+        
         status = itter()
         print (status)
         time = status[0]

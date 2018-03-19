@@ -67,6 +67,7 @@ def get_historical_data(market, timeframe, from_time):
     except:
         print ("Api not responding")
         
+        
 
 # get market price of selected market
 def get_price_now(market):
