@@ -3,21 +3,14 @@ import BinanceAPI
 import Strategy
 import time
 import Stockstats
-from monary import Monary
-from pymongo import MongoClient
+
+
 
 timeframes = Settings.timeframes
 lenmarkets = len(Settings.tradewith)
 
-def write_df_to_mongoDB(  my_df,\
-                          database_name = 'trader' ,\
-                          collection_name = 'data',\
-                          server = 'localhost',\
-                          mongodb_port = 27017):
-    client = MongoClient()
-    db = client[database_name]
-    collection = db[collection_name]
-    collection.insert_many(my_df.to_dict('records'))
+
+
 def main():
     print(50*"#")
     print("Starting main process")
@@ -34,7 +27,10 @@ def main():
 
         data = BinanceAPI.get_data(time, currency, rep, loopdone)
         data2 = Stockstats.make_stockstats(data)
-
+        
+        #strategy runner/get database
+        #disicion + wallet manager
+        #reloop
 
         
 

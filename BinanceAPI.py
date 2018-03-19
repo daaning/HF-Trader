@@ -6,6 +6,7 @@ import pandas as pd
 import stockstats
 import logging
 import time
+import Database
 
 
 #get all the settings from settings
@@ -27,9 +28,9 @@ df = [[[] for x in range(lenmarket)] for y in range(4)]
 def initiate():
     for ma in range(4):
         for ti in range(lenmarket):
-            
             df[ma][ti] = pd.DataFrame(dicts, columns=[markets[ti], 'open', 'high', 'low', 'close', 'volume'])
 initiate()
+
 
 
 # get candle data binance, and calculate stockstats for a set timeframe
@@ -50,7 +51,8 @@ def get_data(time, currency, rep, loopdone):
         df[time][currency].loc[y] = [ dataArray[y][0], dataArray[y][1],
                                       dataArray[y][2], dataArray[y][3],
                                       dataArray[y][4],dataArray[y][5]]
-    
+            
+
     return df[time][currency]
 
 
