@@ -26,12 +26,17 @@ def main():
             BinanceAPI.initiate()
 
         data = BinanceAPI.get_data(time, currency, rep, loopdone)
-        data2 = Stockstats.make_stockstats(data)
-        Database.insert_into_db(data2, time, currency)
 
-        #strategy runner/get database
-        #disicion + wallet manager
-        #reloop
+        if rep != 0:
+            last_line = Stockstats.make_stockstats(data)
+            Database.update_db(last_line, time, currency)
+            
+        else:
+            data2 = Stockstats.make_stockstats(data)
+            Database.fill_new_db(data2, time, currency)
+            
+        
+        
 
         
 

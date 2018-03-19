@@ -35,6 +35,8 @@ initiate()
 
 # get candle data binance, and calculate stockstats for a set timeframe
 def get_data(time, currency, rep, loopdone):
+    
+
     try:
         if time == 0:
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1HOUR)
@@ -64,7 +66,7 @@ def get_historical_data(market, timeframe, from_time):
         return data
     except:
         print ("Api not responding")
-
+        
 
 # get market price of selected market
 def get_price_now(market):
