@@ -13,16 +13,4 @@ output1 = 'close'
 output2 = 'macdh'
 
 
-def last_line(i, data):
-    for index, row in data.iterrows():
-        last_line = markets[i], index, row[output1], row[output2]
-    return last_line
-
-def all_lines(i, data):
-    all_lines = []
-    for index, row in data.iterrows():
-        last_line = markets[i], index, row[output1], row[output2]
-        all_lines.append(last_line)
-    return all_lines
-    
         

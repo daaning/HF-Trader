@@ -13,6 +13,11 @@ language = "en" #language in ISO 639.1 code
 polarr = [[] for i in range(len(markets))]
 sentarr = polarr
 
+
+
+# gets the last text from twitter about a coin/market
+# runs textblob polarity testing over it 
+# returns the average 
 def get_sentiment(i):
     
     subject = markets[i]
