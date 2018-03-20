@@ -14,7 +14,6 @@ lenmarket = len(Settings.tradewith)
 client = Client(Settings.key, Settings.secret)
 tradewith = Settings.tradewith
 tradecurrency = Settings.tradecurrency 
-lentimeframes = len(Settings.timeframes)
 
 # format the markets array for binance input
 markets = []
@@ -33,10 +32,9 @@ initiate()
 
 
 
-# get candle data binance, and calculate stockstats for a set timeframe
+# get candle data binance always gets 1000 of the last candles
 def get_data(time, currency, rep, loopdone):
     
-
     try:
         if time == 0:
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1HOUR)
@@ -51,8 +49,8 @@ def get_data(time, currency, rep, loopdone):
         
     for y in range(len(dataArray)):
         df[time][currency].loc[y] = [ dataArray[y][0], dataArray[y][1],
-                                      dataArray[y][2], dataArray[y][3],
-                                      dataArray[y][4],dataArray[y][5]]
+                                    dataArray[y][2], dataArray[y][3],
+                                    dataArray[y][4],dataArray[y][5]]
             
 
     return df[time][currency]
