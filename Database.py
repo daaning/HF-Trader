@@ -55,8 +55,7 @@ def get_last_entry(time, currency):
 
 # get a set amount of entries from the end of the databanks
 def get_xAmount_entry(time, currency, amount):
-    c.execute("SELECT * FROM %r ORDER BY timestamp DESC LIMIT " +str(amount)  %(
-        databases[currency + time * lenmarket]))
+    c.execute("SELECT * FROM %r ORDER BY timestamp DESC LIMIT " %(databases[currency + time * lenmarket]) + str(amount))
     
     result = c.fetchall()
 

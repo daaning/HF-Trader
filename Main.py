@@ -7,7 +7,8 @@ import Database
 import Strategy
 
 timeframes = Settings.timeframes
-lenmarkets = len(Settings.tradewith)
+markets = Settings.tradewith
+lenmarkets = len(markets)
 
 def main():
     print(50*"#")
@@ -16,12 +17,12 @@ def main():
 
     while True:
         status = itter()
-        print (status)
         time = status[0]
         currency = status [1]
         rep = status[2]
         loopdone = status[3]
         timeloop = status[4]
+       
 
         if loopdone:
             BinanceAPI.initiate()
@@ -31,18 +32,17 @@ def main():
         if rep != 0:
             last_line = Stockstats.update_stockstats(data)
             Database.update_db(time, currency, last_line)
-            print (Strategy.MACD_crossover(time, currency, timeloop))
-
-
+            print (time, markets[currency])
+            Strategy.MACD_crossover(time, currency, timeloop)
+            Strategy.RSI(time, currency, timeloop)
+            
         else:
             data2 = Stockstats.make_stockstats(data)
             Database.fill_new_db(time, currency, data2)
-        
+            print (time, markets[currency])
+            
 
         
-        
-        
-
         
 
 time = -1
