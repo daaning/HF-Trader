@@ -15,35 +15,45 @@ for ma in range(4):
         databases.append(markets[ti] + "." + str(ma))
 
 def create_db():
-    for ma in range(4):
-        for ti in range(lenmarket):
+    for market in range(lenmarket):
+        for time in range(lenmarket):
     
 
             c.execute('''CREATE TABLE %r
-            (timestamp REAL, open REAL, high REAL, low REAL,close REAL,
+            (id int, timestamp REAL, open REAL, high REAL, low REAL,close REAL,
             volume REAL,macd REAL,signal REAL,histogram REAL,rsi REAL)'''
-            %(databases[ti + ma * lenmarket]))
+            %(databases[market + time * lenmarket]))
+           
 
 def fill_new_db(df, time, currency):
     engine = create_engine("sqlite:///data.db")
-    df.to_sql(databases[time + currency * lenmarket], engine, if_exists='append', index=False)
+    df.to_sql(databases[currency + time * lenmarket],
+     engine, if_exists='replace', index=True, index_label="id")
 
-def update_db(last_line, time, currency):
+
+def update_db(last_line_df, time, currency):
     last_in_db = get_last_entry(time, currency)
-    last_in_pd = last_line.values[-1]
-    print (last_in_pd)
+    last_in_pd = last_line_df.values[-1]
+    
+    if int(last_in_pd[0]) == int(last_in_db[1]):
+        print ("not adding same data")
+    else:
+        print("not equal")
+        engine = create_engine("sqlite:///data.db")
+        last_line_df.to_sql(databases[currency + time * lenmarket], engine, if_exists='append',
+        index=True, index_label="id")
 
-    if last_in_db[0] != last_in_pd[0]:
-        values = last_in_pd
+        """
+
         c.execute('''INSERT INTO %r VALUES(?,?,?,?,?,?,?,?,?,?)''' %(
             databases[time + currency * lenmarket]), values)
         conn.commit()
-
+        """
 
 # get last entry from database 
 def get_last_entry(time, currency):
     c.execute("SELECT * FROM %r ORDER BY timestamp DESC LIMIT 1" %(
-        databases[time + currency * lenmarket]))
+        databases[currency + time * lenmarket]))
     result = c.fetchone()
 
     return result
@@ -58,4 +68,4 @@ def get_all_entries(time, currency):
         
     return result
 
-
+print(len(get_all_entries(0,3)))

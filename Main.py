@@ -23,13 +23,14 @@ def main():
         currency = status [1]
         rep = status[2]
         loopdone = status[3]
+        
         if loopdone:
             BinanceAPI.initiate()
 
         data = BinanceAPI.get_data(time, currency, rep, loopdone)
 
         if rep != 0:
-            last_line = Stockstats.make_stockstats(data)
+            last_line = Stockstats.update_stockstats(data)
             Database.update_db(last_line, time, currency)
             
         else:

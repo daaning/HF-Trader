@@ -48,7 +48,7 @@ def get_data(time, currency, rep, loopdone):
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1MINUTE)
     except:
         ("Error.... API not responding")
-
+        
     for y in range(len(dataArray)):
         df[time][currency].loc[y] = [ dataArray[y][0], dataArray[y][1],
                                       dataArray[y][2], dataArray[y][3],
@@ -112,3 +112,5 @@ def wallet_balance():
                 print (bal[l])
     except:
         print("Getting wallet from api failed or your really broke haaah")
+
+
