@@ -12,6 +12,8 @@ sellstats = [False, False, False, False]
 buystats = sellstats
 
 def MACD_crossover(time, currency, timeloop):
+    global sellstats
+    global buystats
     data = Database.get_all_entries(time, currency)
     if timeloop:
         sellstats = [False, False, False, False]
