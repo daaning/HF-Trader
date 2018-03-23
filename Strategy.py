@@ -45,6 +45,7 @@ def RSI(time, currency, timeloop):
         del rsiarr[:]
 
 
+
 adxarr = []
 def ADX(time, currency):
     data = Database.get_xAmount_entry(time, currency, 2) 

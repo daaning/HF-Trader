@@ -29,6 +29,7 @@ def main():
 
         data = BinanceAPI.get_data(time, currency, rep, loopdone)
 
+
         if rep != 0:
             last_line = Stockstats.update_stockstats(data)
             Database.update_db(time, currency, last_line)
