@@ -35,6 +35,7 @@ def main():
             print (time, markets[currency])
             Strategy.MACD_crossover(time, currency, timeloop)
             Strategy.RSI(time, currency, timeloop)
+            Strategy.ADX(time, currency)
             
         else:
             data2 = Stockstats.make_stockstats(data)

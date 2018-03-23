@@ -13,7 +13,6 @@ lenmarket = len(markets)
 
 sellstats = [False,False,False,False]
 buystats = [False,False,False,False]
-
 def MACD_crossover(time, currency, timeloop):
     global sellstats
     global buystats
@@ -29,8 +28,8 @@ def MACD_crossover(time, currency, timeloop):
         buystats = [False,False,False,False]
 
 
-rsiarr = []
 
+rsiarr = []
 def RSI(time, currency, timeloop):
     buy = False
     sell = False
@@ -45,3 +44,14 @@ def RSI(time, currency, timeloop):
         print ("RSIavg: ",rsiavg, buy, sell)
         del rsiarr[:]
 
+
+adxarr = []
+def ADX(time, currency):
+    data = Database.get_xAmount_entry(time, currency, 2) 
+
+    adxarr.append(data[0][12])
+    if time ==3:
+        adxavg = np.average(adxarr)
+        print ("Signals ADX_strength: ", adxarr)
+        print ("AVG ADX_strength: ", adxavg )
+        del adxarr[:]
