@@ -14,12 +14,10 @@ polarr = [[] for i in range(len(markets))]
 sentarr = polarr
 
 
-
 # gets the last text from twitter about a coin/market
 # runs textblob polarity testing over it 
 # returns the average 
 def get_sentiment(i):
-    
     subject = markets[i]
     api = tweepy.API(auth, wait_on_rate_limit=True)
     public_tweets = api.search(subject, language)

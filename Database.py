@@ -44,6 +44,7 @@ def update_db(time, currency, last_line_df):
     except:
         print ("Loading db failed, Trying on the next round")
 
+
 # get last entry from database 
 def get_last_entry(time, currency):
     c.execute("SELECT * FROM %r ORDER BY timestamp DESC LIMIT 1" %(
