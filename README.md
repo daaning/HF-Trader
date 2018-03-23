@@ -1,7 +1,11 @@
 # HF-Trader #
-Automated trading bot
+Automated trading bot.
 
 
 ## installing ##
 
-sudo pip install ta-lib numpy pandas tweepy textblob python-binance logging  
+Install python3.5 or higher
+
+Run Requirement.py or install manually 
+
+sudo pip install ta-lib numpy pandas tweepy textblob python-binance logging sqlalchemy
