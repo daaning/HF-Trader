@@ -12,6 +12,7 @@ Automated trading bot.
 
 make an account on binance. https://www.binance.com/?ref=26331001 
 
+more exchanges coming soon
 
 ### Support ###
 
