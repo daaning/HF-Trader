@@ -29,6 +29,7 @@ def get_sentiment(currency):
     del sentarr[:]
 
 
+
     #loop through the tweets
     for tweet in public_tweets:
         analysis = TextBlob(tweet.text)

@@ -11,7 +11,6 @@ markets = Settings.tradewith
 lenmarket = len(markets)
 
 
-
 sellstats = [False,False,False,False]
 buystats = [False,False,False,False]
 def MACD_crossover(time, currency, timeloop):
