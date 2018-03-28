@@ -1,5 +1,5 @@
 from binance.client import Client
-from binance.exceptions import BinanceAPIException
+from binance.exceptions import BinanceAPIException, BinanceOrderException
 import Main
 import Settings
 import pandas as pd
@@ -44,15 +44,15 @@ def get_data(time, currency, rep, loopdone):
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_5MINUTE)
         elif time == 3:
             dataArray = client.get_klines(symbol=markets[currency], interval=Client.KLINE_INTERVAL_1MINUTE)
-    except:
-        ("Error.... API not responding")
+    except BinanceAPIException as ex:
+        print (ex)
         
     for y in range(len(dataArray)):
         df[time][currency].loc[y] = [ dataArray[y][0], dataArray[y][1],
                                     dataArray[y][2], dataArray[y][3],
                                     dataArray[y][4],dataArray[y][5]]
             
-
+    
     return df[time][currency]
 
 
@@ -62,8 +62,9 @@ def get_historical_data(market, timeframe, from_time):
     try:
         data = client.get_historical_klines(market, timeframe, from_time)
         return data
-    except:
-        print ("Api not responding")
+
+    except BinanceAPIException as ex:
+        print (ex)
         
         
 
@@ -72,8 +73,10 @@ def get_price_now(market):
     try:
         value = client.get_ticker(symbol=market)
         return value['lastPrice']
-    except:
-        print ("Api not responding")
+
+    except BinanceAPIException as ex:
+        print (ex)
+    
 
 
 #market buy and sell, price is exaclty marketprice automatically 
@@ -84,8 +87,9 @@ def market_buy(market, quant):
             quantity= quant
         )
         return True
-    except:
-        print ("Buying failed")
+
+    except BinanceAPIException as ex:
+        print (ex)
         return False
 
 
@@ -96,8 +100,9 @@ def market_sell(market, quant):
             quantity= quant
         )
         return True
-    except:
-        print("Selling failed")
+
+    except BinanceAPIException as ex:
+        print (ex)
         return False
 
 #check all balances in wallet
@@ -108,7 +113,7 @@ def wallet_balance():
         for l in range(len(bal)):
             if float(bal[l]['free']) > 0.0001:
                 print (bal[l])
-    except:
-        print("Getting wallet from api failed or your really broke haaah")
+    except BinanceAPIException as ex:
+        print (ex)
 
 
