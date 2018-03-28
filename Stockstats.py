@@ -11,6 +11,8 @@ def make_stockstats(df):
     df['RSI'] = ta.RSI(df.close, timeperiod=14)
     df['DEMA'] = ta.DEMA(df.close, timeperiod=50)
     df['ADX'] = ta.ADX(df.high, df.low, df.close, timeperiod=20)
+    df['range'] = ta.TRANGE(df.close, timeperiod=50)
+
     return df
 
 # returns the last entry for updating the database

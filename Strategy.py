@@ -56,9 +56,17 @@ def ADX(time, currency):
         print ("AVG ADX_strength: ", adxavg )
         del adxarr[:]
 
-
-def sentiment(time, currency):
+def twitter_sentiment(time, currency):
 
     if time == 3:
         data = TwitterAPI.get_sentiment(currency)
         print("Coins sentiment: ", data)
+
+volarr = []
+def volatility(time, currency):
+    volarr.append(data[0][13])
+
+    if time ==3:
+        print ("Volitily range: volarr")
+        del volarr[:]
+    

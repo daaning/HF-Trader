@@ -36,7 +36,7 @@ def main():
             Strategy.MACD_crossover(time, currency, timeloop)
             Strategy.RSI(time, currency, timeloop)
             Strategy.ADX(time, currency)
-            Strategy.sentiment(time, currency)
+            Strategy.twitter_sentiment(time, currency)
             
             
         else:
