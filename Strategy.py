@@ -4,6 +4,7 @@ import Database
 import BinanceAPI
 import numpy as np
 import logging
+import TwitterAPI
 
 
 markets = Settings.tradewith
@@ -28,7 +29,6 @@ def MACD_crossover(time, currency, timeloop):
         buystats = [False,False,False,False]
 
 
-
 rsiarr = []
 def RSI(time, currency, timeloop):
     buy = False
@@ -41,9 +41,9 @@ def RSI(time, currency, timeloop):
             buy = True    
         if rsiavg > 70.0:
             sell = True
+        print ("RSI signals: ", rsiarr)
         print ("RSIavg: ",rsiavg, buy, sell)
         del rsiarr[:]
-
 
 
 adxarr = []
@@ -56,3 +56,10 @@ def ADX(time, currency):
         print ("Signals ADX_strength: ", adxarr)
         print ("AVG ADX_strength: ", adxavg )
         del adxarr[:]
+
+
+def sentiment(time, currency):
+
+    if time == 3:
+        data = TwitterAPI.get_sentiment(currency)
+        print("Coins sentiment: ", data)
