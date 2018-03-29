@@ -53,6 +53,19 @@ def macd_crossover(df, currency, timeframe):
     return polarity
 
 
+def get_volume_weigthed(stockstatsArray):
+    volumeArray = []
+    length = len(stockstatsArray)
+    data = Database.get_xAmount_entry(time, currency, length)
+    for i in range(length):
+        volumeArray.append(data[i][4])
+
+
+    
+
+
+
+
 strategies = ["macd"]
 outcomes = [[] for r in range(lenmarket)]
 def run(df, timeframe, currency, rep, loopdone, timeloopdone):

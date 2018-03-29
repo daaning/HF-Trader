@@ -25,12 +25,3 @@ def get_bollinger(df, timeperiod):
     Bollinger = ta.BBANDS(df.close, timeperiod=20)
     return Bollinger
 
-def get_volume_weigthed(stockstatsArray):
-    volumeArray = []
-    length = len(stockstatsArray)
-    data = Database.get_xAmount_entry(time, currency, length)
-    for i in range(length):
-        volumeArray.append(data[i][4])
-
-
-    

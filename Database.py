@@ -2,6 +2,7 @@ import sqlite3
 from sqlalchemy import create_engine
 import Settings
 import pandas as pd
+import os.path
 
 conn = sqlite3.connect('data.db')
 c = conn.cursor()
@@ -19,7 +20,8 @@ def create_db():
         for time in range(lenmarket):
             c.execute('''CREATE TABLE %r
             (id int, timestamp REAL, open REAL, high REAL, low REAL,close REAL,
-            volume REAL,macd REAL,signal REAL,histogram REAL,rsi REAL)'''
+            volume REAL,macd REAL,signal REAL,histogram REAL,rsi REAL,dema REAL,
+            ADX REAL, bollinger REAL)'''
             %(databases[market + time * lenmarket]))
         
 
@@ -28,7 +30,7 @@ def fill_new_db(time, currency, df):
     
     engine = create_engine("sqlite:///data.db")
     df.to_sql(databases[currency + time * lenmarket],
-    engine, if_exists='replace', index=True, index_label="id")
+    engine, if_exists='append', index=True, index_label="id")
 
 
 # after the first round this function checks for new data and appends that 

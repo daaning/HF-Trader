@@ -86,6 +86,7 @@ def market_buy(market, quant):
             symbol= market,
             quantity= quant
         )
+        print (order)
         return True
 
     except BinanceAPIException as ex:
@@ -99,6 +100,7 @@ def market_sell(market, quant):
             symbol= market,
             quantity= quant
         )
+        print(order)
         return True
 
     except BinanceAPIException as ex:
