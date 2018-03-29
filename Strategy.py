@@ -1,64 +1,64 @@
 import pandas as pd
 import Settings
+import Stockstats
 import Database
 import BinanceAPI
 import numpy as np
 import logging
 import TwitterAPI
-
-
+import talib as ta
 markets = Settings.tradewith
 lenmarket = len(markets)
 
 
-sellstats = [False,False,False,False]
-buystats = [False,False,False,False]
-def MACD_crossover(time, currency, timeloop):
-    global sellstats
-    global buystats
-    data = Database.get_xAmount_entry(time, currency, 2)
-    if (data[0][9] > 0.0) and (data[1][9] < 0.0): 
-        buystats[time] = True    
-    if data[0][9] < 0.0 and data[1][9] > 0.0:
-        sellstats[time] = True
+# gets the macd from database and calculates it  
+def get_macd(df, fastperiod, slowperiod, signalperiod):
+    MACD, signal, histogram = ta.MACD(
+        df.close, fastperiod=fastperiod, slowperiod=slowperiod, signalperiod=signalperiod)
+    return MACD.iloc[-1], signal.iloc[-1], histogram.iloc[-1]
+
+lowestpoint=highestpoint=crossover= [[0.0,0.0,0.0,0.0] for l in range(lenmarket)]
+macd_data = [[[],[],[],[]] for s in range(lenmarket)]
+def macd_crossover(df, currency, timeframe):
+    
+    polarity = 0.0
+
+    # after crossover event happend quadratically returning to 0.0 polarity 
+    crossover[currency][timeframe] = crossover[currency][timeframe] - (crossover[currency][timeframe] * crossover[currency][timeframe])
+    
+    # gets the lowest and the highest macdvalue 
+    macd_data[currency][timeframe].append(get_macd(df, 12, 26, 9))
+    if macd_data[currency][timeframe][0][-1] < lowestpoint[currency][timeframe]: 
+        lowestpoint[currency][timeframe] = macd_data[currency][timeframe][0][-1]
+    if macd_data[currency][timeframe][0][-1] > highestpoint[currency][timeframe]: 
+        highestpoint[currency][timeframe] = macd_data[currency][timeframe][0][-1]
+
+    # checks if the macd has a crossover of its lines
+    # multiplies that for relative distance to the middle
+    if len(macd_data[currency][timeframe]) > 2:
+        if macd_data[currency][timeframe][2][-1] > 0.0 and macd_data[currency][timeframe][2][-2] < 0.0:
+            crossover[currency][timeframe] == 1.0 * (macd_data[currency][timeframe][0][-1]/lowestpoint[currency][timeframe])
+        elif macd_data[currency][timeframe][2][-1] < 0.0 and macd_data[currency][timeframe][2][-2] > 0.0:
+            crossover[currency][timeframe] == -1.0 * (macd_data[currency][timeframe][0][-1]/lowestpoint[currency][timeframe])
+        
+    # Returns the avg polarity when the currencyloop whent through all its timeframes
+    
+    if timeframe == 3:
+        polarity = np.average(crossover[currency])
+
+    # keeps the array from getting to big
+    if len(macd_data[currency][timeframe]) > 3:
+        del macd_data[currency][timeframe][0] 
+    
+    return polarity
+
+
+strategies = ["macd"]
+outcomes = [[] for r in range(lenmarket)]
+def run(df, timeframe, currency, rep, loopdone, timeloopdone):
+    
+    pol1 = macd_crossover(df, currency, timeframe)
+    if timeframe == 3:
+        outcomes[currency].append(pol1)
+        print (outcomes)
        
-    if time == 3:
-        print ("MACD_crossover: ", buystats, sellstats)    
-        sellstats = [False,False,False,False]
-        buystats = [False,False,False,False]
-
-
-rsiarr = []
-def RSI(time, currency, timeloop):
-    buy = False
-    sell = False
-    data = Database.get_xAmount_entry(time, currency, 2)
-    rsiarr.append(data[0][10])
-    if time == 3:
-        rsiavg = np.average(rsiarr) 
-        if rsiavg < 30.0:
-            buy = True    
-        if rsiavg > 70.0:
-            sell = True
-        print ("RSI signals: ", rsiarr)
-        print ("RSIavg: ",rsiavg, buy, sell)
-        del rsiarr[:]
-
-
-adxarr = []
-def ADX(time, currency):
-    data = Database.get_xAmount_entry(time, currency, 2) 
-
-    adxarr.append(data[0][12])
-    if time ==3:
-        adxavg = np.average(adxarr)
-        print ("Signals ADX_strength: ", adxarr)
-        print ("AVG ADX_strength: ", adxavg )
-        del adxarr[:]
-
-
-def sentiment(time, currency):
-
-    if time == 3:
-        data = TwitterAPI.get_sentiment(currency)
-        print("Coins sentiment: ", data)

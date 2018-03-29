@@ -1,27 +1,36 @@
 import talib as ta
 import numpy
-
+import Database
 
 # takes from the TA-Lib checkout https://github.com/mrjbq7/ta-lib 
-# returns the last 1000 entries for filling the db at the start
-def make_stockstats(df):
-    
-    df['MACD'], df["signal"], df['histogram'] = ta.MACD(
-        df.close, fastperiod=12, slowperiod=26, signalperiod=9)
-    df['RSI'] = ta.RSI(df.close, timeperiod=14)
-    df['DEMA'] = ta.DEMA(df.close, timeperiod=50)
-    df['ADX'] = ta.ADX(df.high, df.low, df.close, timeperiod=20)
-    return df
 
-# returns the last entry for updating the database
-def update_stockstats(df):
-    
-    df['MACD'], df["signal"], df['histogram'] = ta.MACD(
+def get_macd(df, fastperiod, slowperiod, signalperiod):
+    MACD, signal, histogram = ta.MACD(
         df.close, fastperiod=12, slowperiod=26, signalperiod=9)
-    df['RSI'] = ta.RSI(df.close, timeperiod=14)
-    df['DEMA'] = ta.DEMA(df.close, timeperiod=50)
-    df['ADX'] = ta.ADX(df.high, df.low, df.close, timeperiod =20)
-    
-    # print (df.tail(1))
-    return df.tail(1)
+    return MACD, signal, histogram
 
+def get_rsi(df, timeperiod):
+    RSI = ta.RSI(df.close, timeperiod=timeperiod)
+    return RSI
+
+def get_dema(df, timeperiod):
+    DEMA = ta.DEMA(df.close, timeperiod=50)
+    return DEMA
+
+def get_adx(df, timeperiod):
+    ADX = ta.ADX(df.high, df.low, df.close, timeperiod=20)
+    return ADX
+
+def get_bollinger(df, timeperiod):
+    Bollinger = ta.BBANDS(df.close, timeperiod=20)
+    return Bollinger
+
+def get_volume_weigthed(stockstatsArray):
+    volumeArray = []
+    length = len(stockstatsArray)
+    data = Database.get_xAmount_entry(time, currency, length)
+    for i in range(length):
+        volumeArray.append(data[i][4])
+
+
+    

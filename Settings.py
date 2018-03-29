@@ -50,5 +50,5 @@ These are the expert settings we dont recommend changing
 """
 
 # Timeframe: 1MINUTE, 3MINUTE, 5MINUTE, 15MINUTE, 30MINUTE, 1HOUR or bigger
-timeframes = ["KLINE_INTERVAL_1HOUR", "Client.KLINE_INTERVAL_30MINUTE",
-              "Client.KLINE_INTERVAL_5MINUTE", "Client.KLINE_INTERVAL_1MINUTE"]
+timeframes = ["1hour", "30minute",
+              "5minute", "1minute"]

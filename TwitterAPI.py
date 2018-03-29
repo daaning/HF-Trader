@@ -29,7 +29,6 @@ def get_sentiment(currency):
     del sentarr[:]
 
 
-
     #loop through the tweets
     for tweet in public_tweets:
         analysis = TextBlob(tweet.text)
@@ -39,4 +38,3 @@ def get_sentiment(currency):
 
 
     return np.average(polarr), np.average(sentarr)
-
