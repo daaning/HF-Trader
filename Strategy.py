@@ -11,16 +11,31 @@ markets = Settings.tradewith
 lenmarket = len(markets)
 
 
-# gets the macd from database and calculates it  
+# functions that make the stockstats with TA-LIB from database data.db
+
 def get_macd(df, fastperiod, slowperiod, signalperiod):
     MACD, signal, histogram = ta.MACD(
         df.close, fastperiod=fastperiod, slowperiod=slowperiod, signalperiod=signalperiod)
     return MACD.iloc[-1], signal.iloc[-1], histogram.iloc[-1]
 
+def get_RSI(df, timeperiod):
+    RSI = ta.RSI(df.close, timeperiod=timeperiod)
+    return RSI.iloc[-1]
+
+    
+
+
+
+# function that calculates the polarity of the macd crossover strategy i created 
+# based on four different timeframes that spike the polarity when triggert to than
+# be reduced every loop thereafter returns a buy/sell polarity to be compared and optimized against
+# the delayed optimized buysell polarity 
+
 lowestpoint=highestpoint=crossover= [[0.0,0.0,0.0,0.0] for l in range(lenmarket)]
 macd_data = [[[],[],[],[]] for s in range(lenmarket)]
 def macd_crossover(df, currency, timeframe):
     
+    # the buy/sell polarity value ranges from 1 to -1 
     polarity = 0.0
 
     # after crossover event happend quadratically returning to 0.0 polarity 
@@ -53,6 +68,44 @@ def macd_crossover(df, currency, timeframe):
     return polarity
 
 
+
+# different TA-LIB rsi functions run over different timeframes, averaged and multiplied
+# by a relative signal strength indicator as a buy/sell polarity
+
+rsi_data = [[[],[],[],[]] for s in range(lenmarket)]
+polArr = [[0.0,0.0,0.0,0.0] for l in range(lenmarket)]
+def RSI(df, currency, timeframe):
+    
+    polarity = 0.0 
+    rsi_data[currency][timeframe].append(get_RSI(df, 14))
+    entry = rsi_data[currency][timeframe]
+    polArr[currency][timeframe] = (entry[0]- 50.0) / 50.0 
+
+    if timeframe == 3:
+        polarity = np.average(polArr[currency])    
+
+    if len(rsi_data[currency][timeframe]) > 3:
+        del rsi_data[currency][timeframe][0] 
+    
+    return polarity
+
+
+# returns a perfect tradesingal starting one turn ago 
+lowest=highest= [[] for l in range(lenmarket)]
+def historic_perfect_signal(df, currency, timeframe):
+    
+    polarity = 0.0
+
+    if timeframe == 3:
+        if df.close[-1] > highest[currency]:
+            highest[currency] = (df.close[-1], df.index[-1])
+            polarity = 1.0
+        elif df.close[-1] < lowest[currency]:
+            lowest[currency] = (df.close[-1], df.index[-1])
+            polarity = -1.0
+
+    # have to reduce the polarity by relative distance to last lower/higher or perfect buy/sell event 
+
 def get_volume_weigthed(stockstatsArray):
     volumeArray = []
     length = len(stockstatsArray)
@@ -67,11 +120,13 @@ def get_volume_weigthed(stockstatsArray):
 
 
 strategies = ["macd"]
-outcomes = [[] for r in range(lenmarket)]
+outcomes = [[[],[]] for r in range(lenmarket)]
 def run(df, timeframe, currency, rep, loopdone, timeloopdone):
     
-    pol1 = macd_crossover(df, currency, timeframe)
+    strat01 = macd_crossover(df, currency, timeframe)
+    strat02 = RSI(df, currency, timeframe)
     if timeframe == 3:
-        outcomes[currency].append(pol1)
+        outcomes[currency][0].append(strat01)
+        outcomes[currency][1].append(strat02)
         print (outcomes)
        
