@@ -24,8 +24,6 @@ def get_RSI(df, timeperiod):
 
     
 
-
-
 # function that calculates the polarity of the macd crossover strategy i created 
 # based on four different timeframes that spike the polarity when triggert to than
 # be reduced every loop thereafter returns a buy/sell polarity to be compared and optimized against
@@ -103,10 +101,12 @@ def historic_perfect_signal(df, currency, timeframe):
         elif df.close[-1] < lowest[currency]:
             lowest[currency] = (df.close[-1], df.index[-1])
             polarity = -1.0
-
+    polarity = polarity - (polarity * 100 / polarity * 800)
+    print (polarity)
+    return polarity 
     # have to reduce the polarity by relative distance to last lower/higher or perfect buy/sell event 
 
-def get_volume_weigthed(stockstatsArray):
+def get_volume_weigthed(stockstatsArray, time, currency):
     volumeArray = []
     length = len(stockstatsArray)
     data = Database.get_xAmount_entry(time, currency, length)
@@ -125,8 +125,10 @@ def run(df, timeframe, currency, rep, loopdone, timeloopdone):
     
     strat01 = macd_crossover(df, currency, timeframe)
     strat02 = RSI(df, currency, timeframe)
+    perfect = historic_perfect_signal(df, currency, timeframe)
     if timeframe == 3:
         outcomes[currency][0].append(strat01)
         outcomes[currency][1].append(strat02)
+        outcomes[currency][2].append(perfect)
         print (outcomes)
        
