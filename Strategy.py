@@ -93,14 +93,17 @@ lowest=highest= [[] for l in range(lenmarket)]
 def historic_perfect_signal(df, currency, timeframe, rep):
     
     polarity = 0.0
-    if rep > 2:
-        if timeframe == 3:
-            if df.close[-1] > highest[currency]:
-                highest[currency] = (df.close[-1], df.index[-1])
-                polarity = 1.0
-            elif df.close[-1] < lowest[currency]:
-                lowest[currency] = (df.close[-1], df.index[-1])
-                polarity = -1.0
+    p = Database.get_last_entry(currency, timeframe)
+    indexNr = p[0]
+    priceNow = p[1]
+
+    if timeframe == 3:
+        if priceNow > highest[currency]:
+            highest[currency] = (priceNow, indexNr)
+            polarity = 1.0
+        elif priceNow < lowest[currency]:
+            lowest[currency] = (priceNow, indexNr)
+            polarity = -1.0
     polarity -= polarity/10
     
     return polarity 
