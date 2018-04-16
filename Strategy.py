@@ -90,19 +90,19 @@ def RSI(df, currency, timeframe):
 
 # returns a perfect tradesingal starting one turn ago 
 lowest=highest= [[] for l in range(lenmarket)]
-def historic_perfect_signal(df, currency, timeframe):
+def historic_perfect_signal(df, currency, timeframe, rep):
     
     polarity = 0.0
-
-    if timeframe == 3:
-        if df.close[-1] > highest[currency]:
-            highest[currency] = (df.close[-1], df.index[-1])
-            polarity = 1.0
-        elif df.close[-1] < lowest[currency]:
-            lowest[currency] = (df.close[-1], df.index[-1])
-            polarity = -1.0
-    polarity = polarity - (polarity * 100 / polarity * 800)
-    print (polarity)
+    if rep > 2:
+        if timeframe == 3:
+            if df.close[-1] > highest[currency]:
+                highest[currency] = (df.close[-1], df.index[-1])
+                polarity = 1.0
+            elif df.close[-1] < lowest[currency]:
+                lowest[currency] = (df.close[-1], df.index[-1])
+                polarity = -1.0
+    polarity -= polarity/10
+    
     return polarity 
     # have to reduce the polarity by relative distance to last lower/higher or perfect buy/sell event 
 
@@ -120,12 +120,12 @@ def get_volume_weigthed(stockstatsArray, time, currency):
 
 
 strategies = ["macd"]
-outcomes = [[[],[]] for r in range(lenmarket)]
+outcomes = [[[],[],[]] for r in range(lenmarket)]
 def run(df, timeframe, currency, rep, loopdone, timeloopdone):
     
     strat01 = macd_crossover(df, currency, timeframe)
     strat02 = RSI(df, currency, timeframe)
-    perfect = historic_perfect_signal(df, currency, timeframe)
+    perfect = historic_perfect_signal(df, currency, timeframe, rep)
     if timeframe == 3:
         outcomes[currency][0].append(strat01)
         outcomes[currency][1].append(strat02)
