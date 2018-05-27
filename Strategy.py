@@ -12,23 +12,19 @@ lenmarket = len(markets)
 
 
 # functions that make the stockstats with TA-LIB from database data.db
-
 def get_macd(df, fastperiod, slowperiod, signalperiod):
     MACD, signal, histogram = ta.MACD(
         df.close, fastperiod=fastperiod, slowperiod=slowperiod, signalperiod=signalperiod)
     return MACD.iloc[-1], signal.iloc[-1], histogram.iloc[-1]
-
 def get_RSI(df, timeperiod):
     RSI = ta.RSI(df.close, timeperiod=timeperiod)
     return RSI.iloc[-1]
 
     
-
 # function that calculates the polarity of the macd crossover strategy i created 
 # based on four different timeframes that spike the polarity when triggert to than
 # be reduced every loop thereafter returns a buy/sell polarity to be compared and optimized against
 # the delayed optimized buysell polarity 
-
 lowestpoint=highestpoint=crossover= [[0.0,0.0,0.0,0.0] for l in range(lenmarket)]
 macd_data = [[[],[],[],[]] for s in range(lenmarket)]
 def macd_crossover(df, currency, timeframe):
@@ -69,7 +65,6 @@ def macd_crossover(df, currency, timeframe):
 
 # different TA-LIB rsi functions run over different timeframes, averaged and multiplied
 # by a relative signal strength indicator as a buy/sell polarity
-
 rsi_data = [[[],[],[],[]] for s in range(lenmarket)]
 polArr = [[0.0,0.0,0.0,0.0] for l in range(lenmarket)]
 def RSI(df, currency, timeframe):
@@ -116,12 +111,7 @@ def get_volume_weigthed(stockstatsArray, time, currency):
         volumeArray.append(data[i][4])
 
 
-    
-
-
-
-
-strategies = ["macd"]
+strategies = ["macd", "rsi", "perfect_hist"]
 outcomes = [[[],[],[]] for r in range(lenmarket)]
 def run(df, timeframe, currency, rep, loopdone, timeloopdone):
     
