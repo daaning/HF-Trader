@@ -44,7 +44,10 @@ def main():
 time = -1
 currency = 0
 rep = 0
+"""
+Itterration function that addapts to the number of currencies and timeframes
 
+"""
 def itter():
     global time
     global rep

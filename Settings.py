@@ -1,10 +1,7 @@
 
 """
 these are the settings you have to set before trading
-
 """
-
-
 # set your trade currency
 tradecurrency = "BTC"
 
@@ -19,15 +16,13 @@ stakeamount = 0.001
 # maximum amount of trades the bot will acquire 
 maxstakes = 5
 
-# if your strategy doesnt sell without profit set minimum Return of investment
+# if your strategy doesnt sell without profit set. minimum Return of investment
+# 1.00 is 100 procent return on original investment
 minROI = 1.01 # minimum ROI in % * 100 on selling with stoploss
-
-
 
 """
 these are the settings you have to set in the Config.json file they are to be found 
 at twitter and binance
-
 """
 
 import json
@@ -46,9 +41,7 @@ secret= config['secret']
 
 """
 These are the expert settings we dont recommend changing
-
 """
-
 # Timeframe: 1MINUTE, 3MINUTE, 5MINUTE, 15MINUTE, 30MINUTE, 1HOUR or bigger
 timeframes = ["1hour", "30minute",
               "5minute", "1minute"]
