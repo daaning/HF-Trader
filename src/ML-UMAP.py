@@ -1,15 +1,10 @@
-import json
 import umap
-import numpy as np
-import glob
-import matplotlib.pyplot as plt
+import numpy
 
-
-# create datastores
-data = [a, b, c, d, e]
+data = []
 
 
 # build the tsne model on the image vectors
 print('building umap model')
 reducer = umap.UMAP()
-fit_model = reducer.fit_transform(np.array(data))
+fit_model = reducer.fit_transform(numpy.array(data))
