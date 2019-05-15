@@ -6,7 +6,7 @@ these are the settings you have to set before trading
 
 
 # markets where to trade in
-markets = ["BTCBNB",
+markets = ["BNBBTC",
            "BNBUSDT"]
 
 # stake amount in tradecurrency
