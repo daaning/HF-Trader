@@ -1,1 +1,2 @@
-Settings.py
+*.json
+*.db

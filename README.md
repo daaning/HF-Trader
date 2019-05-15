@@ -1,21 +1,17 @@
-# HF-Trader #
+# HF-Trader
+
 Automated trading bot.
 
-
-## installing ##
+## installing
 
 - Install python3.5 or newer and pip
 - Run requirements.pip in pip or install manually:
 - sudo pip install ta-lib numpy pandas tweepy textblob python-binance logging sqlalchemy
 
-## Binance ##
+## Binance
 
-make an account on binance. https://www.binance.com/?ref=26331001 
+make an account on binance. https://www.binance.com/?ref=26331001
 
-more exchanges coming soon
+enter that in Settings.py
 
-### Support ###
-
-Support the team either make an account with our link ^^ or donate to 
-
-LTC: LhDFMkqag8ub1coCEKBX7huXAwbodB2Qvw
+### Support
