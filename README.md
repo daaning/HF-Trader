@@ -13,7 +13,7 @@ Using bokeh in the browser also possible to self act by clicking the buy/sell bu
 - bokeh serve --show graph.py
 - navigate to localhost:8080
 
-## Binance
+## binance
 
 make an account on binance. https://www.binance.com/?ref=26331001
 

@@ -11,14 +11,15 @@ conn = sqlite3.connect('data/data.db')
 c = conn.cursor()
 
 c.execute('''
-    CREATE TABLE prices(timestamp INT, opens REAL, high REAL, low REAL, close REAL, volume REAL, sentiment REAL, objectivity REAL)
+    CREATE TABLE prices(timestamp INT, opens REAL, high REAL, low REAL, close REAL, volume REAL)
 ''')
 
 c.execute('''
     CREATE TABLE predictions(timestamp INT, macd REAL, rsi REAL, adx REAL, stochastic REAL, sentiment REAL, machine REAL, tsne REAL)
 ''')
+print("database created")
 
-def insert_data(timestamp, opens, high, low, close, volume, sentiment, objectivity):
+def insert_data(timestamp, opens, high, low, close, volume):
     c.execute('''INSERT INTO prices(timestamp, opens, high, low, close, volume)
                   VALUES(?,?,?,?,?,?)''', (timestamp, opens, high, low, close, volume))
 
@@ -32,8 +33,8 @@ def get_all_data():
     user = c.fetchall()
     return user
 
-def get_last_data():
-    c.execute('''SELECT * FROM prices ORDER BY timestamp DESC LIMIT 20''')
+def get_last_data(n):
+    c.execute("SELECT * FROM prices ORDER BY timestamp DESC LIMIT " + str(n))
     user = c.fetchall()
     return user
 

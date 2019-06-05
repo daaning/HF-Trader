@@ -15,7 +15,7 @@ ds1 = r1.data_source
 ds2 = r2.data_source
 
 @linear()
-def update(step):
+def update(step, data):
     ds1.data['x'].append(step)
     ds1.data['y'].append(random.randint(0,100))
     ds2.data['x'].append(step)

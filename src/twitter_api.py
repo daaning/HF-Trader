@@ -12,6 +12,9 @@ twitter_key = config['twitter_key']
 twitter_secret = config['twitter_secret']
 twitter_tokenkey = config['twitter_tokenkey']
 twitter_tokensecret = config['twitter_tokensecret']
+subject = config["trade-market"][3:]
+print(subject)
+
 
 try:
     auth = tweepy.OAuthHandler(twitter_key, twitter_secret)
@@ -23,7 +26,7 @@ except:
 
 polarr = []
 sentarr = []
-def get_sentiment(subject):
+def get_sentiment():
     try:
         public_tweets = api.search(subject, "en")
     except:
@@ -31,10 +34,8 @@ def get_sentiment(subject):
     del polarr[:]
     del sentarr[:]
     for tweet in public_tweets:
-        print(tweet.text)
         analysis = TextBlob(tweet.text)
         sentiment = analysis.sentiment
-        print(sentiment)
         polarr.append(sentiment[0])
         sentarr.append(sentiment[1])
 

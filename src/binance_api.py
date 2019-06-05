@@ -1,9 +1,9 @@
 from binance.client import Client
+from binance.client import BinanceAPIException
 import time
 import csv
 import json 
 import database
-import twitter
 
 
 config = json.load(open('config.json'))
@@ -13,20 +13,22 @@ tradewith = config["trade-market"]
 
 def fill_database():
     try:
-        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "1 Apr, 2019")
+        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "1 Jun, 2019")
     except BinanceAPIException as ex:
         print (ex)
     
     for kline in klines:
-        database.insert(kline[0],kline[1],kline[2],kline[3],kline[4],kline[5])
+        database.insert_data(kline[0],kline[1],kline[2],kline[3],kline[4],kline[5])
+
+    print("database filled")
 
 
 def get_data():
     try:
-        kline = client.get_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE)
+        kline = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "1 hour ago UTC")
     except BinanceAPIException as ex:
         print (ex)
-    timestamp, opens, high, low, close, volume  = kline[len(kline)-1][0], kline[len(kline)-1][1], kline[len(kline)-1][2], kline[len(kline)-1][3], kline[len(kline)-1][4] 
+    timestamp, opens, high, low, close, volume  = kline[len(kline)-1][0], kline[len(kline)-1][1], kline[len(kline)-1][2], kline[len(kline)-1][3], kline[len(kline)-1][4], kline[len(kline)-1][5] 
     database.insert_data(timestamp, opens, high, low, close, volume)
 
 
