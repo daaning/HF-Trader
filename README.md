@@ -15,7 +15,5 @@ Using bokeh in the browser also possible to self act by clicking the buy/sell bu
 
 ## binance
 
-make an account on binance. https://www.binance.com/?ref=26331001
-
-enter that in Settings.py
+an account on binance is needed for data and trades. https://www.binance.com/?ref=26331001
 

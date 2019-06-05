@@ -1,4 +1,7 @@
-make an binance accout a twitter account and make a config.json in this format
+# installation
+
+- make an binance accout a twitter-developer account get api keys for both
+- make a file called config.json in this format
 
 {
     "trade-market" : "BNBETH",
@@ -15,10 +18,13 @@ make an binance accout a twitter account and make a config.json in this format
 
 
 
-install ta-lib on your machine https://mrjbq7.github.io/ta-lib/install.html
+    install ta-lib on your machine https://mrjbq7.github.io/ta-lib/install.html
 
-pip install -r requirements.txt --no-index --find-links file:///tmp/packages
+    pip install -r requirements.txt --no-index --find-links file:///tmp/packages
 
-python main.py
 
-bokeh serve --show myplot.py
+    python main.py
+
+## to visualize outside of terminal
+
+    bokeh serve --show graph.py
