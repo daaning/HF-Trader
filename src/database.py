@@ -15,17 +15,16 @@ c.execute('''
 ''')
 
 c.execute('''
-    CREATE TABLE predictions(timestamp INT, macd REAL, rsi REAL, adx REAL, stochastic REAL, sentiment REAL, machine REAL, tsne REAL)
+    CREATE TABLE predictions(timestamp INT, rsi REAL, macd REAL, sar REAL, adosc REAL, aroon REAL, ult REAL, sent REAL, obj REAL)
 ''')
-print("database created")
 
 def insert_data(timestamp, opens, high, low, close, volume):
     c.execute('''INSERT INTO prices(timestamp, opens, high, low, close, volume)
                   VALUES(?,?,?,?,?,?)''', (timestamp, opens, high, low, close, volume))
 
-def insert_predictions(timestamp, macd, rsi, adx, stochastic, sentiment, machine, tsne):
-    c.execute('''INSERT INTO prices(timestamp, macd, rsi, adx, stochastic, sentiment, machine, tsne)
-                  VALUES(?,?,?,?,?,?,?)''', (timestamp, macd, rsi, adx, stochastic, sentiment, machine, tsne))
+def insert_predictions(timestamp, rsi, macd, sar, adosc, aroon, ult, sent, obj):
+    c.execute('''INSERT INTO predictions(timestamp, rsi, macd, sar, adosc, aroon, ult, sent, obj)
+                  VALUES(?,?,?,?,?,?,?,?,?)''', (timestamp, rsi, macd, sar, adosc, aroon, ult, sent, obj))
 
 
 def get_all_data():

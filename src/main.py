@@ -17,7 +17,7 @@ if __name__ == "__main__":
     while True:
         binance_api.get_data()
         data = database.get_last_data(data_amount)
-        statisics = stats.calculate(data)
-        print(statisics)
+        statistics = stats.calculate(data)
+        print(statistics)
         time.sleep(300)
 

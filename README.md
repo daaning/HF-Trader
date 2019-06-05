@@ -1,6 +1,6 @@
 # LF-Trader
 
-Automated trading bot. Trades cryptocurrency pairs on binance using stockstats, machine learning(LSTM) and T-SNE to predict and act.
+Automated trading bot. Trades cryptocurrency pairs on binance using stockstats analysed by a LSTM network and a T-SNE projection to predict and act on pricechanges.
 
 ## installing
 
@@ -15,5 +15,5 @@ Using bokeh in the browser also possible to self act by clicking the buy/sell bu
 
 ## binance
 
-an account on binance is needed for data and trades. https://www.binance.com/?ref=26331001
+an account from binance is needed for data and trades. https://www.binance.com/?ref=26331001
 

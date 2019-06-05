@@ -13,7 +13,7 @@ twitter_secret = config['twitter_secret']
 twitter_tokenkey = config['twitter_tokenkey']
 twitter_tokensecret = config['twitter_tokensecret']
 subject = config["trade-market"][3:]
-print(subject)
+print("trading in " + subject)
 
 
 try:

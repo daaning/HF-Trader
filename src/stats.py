@@ -1,10 +1,11 @@
 import talib
 import numpy as np 
 import twitter_api
+import database
 
 
 def calculate(data):
-
+    timestamp = data[len(data)-1][0]
     nopen = [] 
     nhigh = []
     nlow = [] 
@@ -30,4 +31,5 @@ def calculate(data):
     ult = talib.ULTOSC(hc, lc, cc, timeperiod1=7, timeperiod2=14, timeperiod3=28)
     obj, sent = twitter_api.get_sentiment()
 
-    return rsi[-1], macdsignal[0][-1], sar[-1], adosc[-1], aroon[-1], ult[-1], sent, obj
+    database.insert_predictions(timestamp, rsi[-1], macdsignal[0][-1], sar[-1], adosc[-1], aroon[-1], ult[-1], sent, obj)
+    return timestamp, rsi[-1], macdsignal[0][-1], sar[-1], adosc[-1], aroon[-1], ult[-1], sent, obj
