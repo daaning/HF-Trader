@@ -5,4 +5,5 @@ pandas==0.20.3
 python-binance==0.6.7
 regex==2018.2.21
 stockstats==0.2.0
+bokeh==1.1.0
 TA-Lib==0.4.17

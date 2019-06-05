@@ -1,5 +1,5 @@
 
-# bokeh serve --show myplot.py
+# bokeh serve --show graph.py
 from bokeh.plotting import figure, curdoc
 from bokeh.driving import linear
 import random

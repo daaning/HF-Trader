@@ -27,9 +27,18 @@ def insert_predictions(timestamp, macd, rsi, adx, stochastic, sentiment, machine
                   VALUES(?,?,?,?,?,?,?)''', (timestamp, macd, rsi, adx, stochastic, sentiment, machine, tsne))
 
 
-def get_all():
+def get_all_data():
     c.execute('''SELECT * FROM prices''')
     user = c.fetchall()
     return user
 
+def get_last_data():
+    c.execute('''SELECT * FROM prices ORDER BY timestamp DESC LIMIT 20''')
+    user = c.fetchall()
+    return user
+
+def get_predictions():
+    c.execute('''SELECT * from predictions''')
+    user = c.fetchall()
+    return user
 
