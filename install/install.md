@@ -27,4 +27,4 @@
 
 ## to visualize outside of terminal
 
-    bokeh serve --show graph.py
+    bokeh serve --show src/graph.py

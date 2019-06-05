@@ -37,8 +37,8 @@ def get_last_data(n):
     user = c.fetchall()
     return user
 
-def get_predictions():
-    c.execute('''SELECT * from predictions''')
+def get_predictions(n):
+    c.execute("SELECT * FROM predictions")
     user = c.fetchall()
     return user
 

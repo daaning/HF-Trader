@@ -10,8 +10,8 @@ Automated trading bot. Trades cryptocurrency pairs on binance using stockstats a
 
 Using bokeh in the browser also possible to self act by clicking the buy/sell button
 
-- bokeh serve --show graph.py
-- navigate to localhost:8080
+- bokeh serve --show src/graph.py
+- navigate to localhost:5006
 
 ## binance
 
