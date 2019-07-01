@@ -6,14 +6,14 @@ import json
 import database
 
 
-config = json.load(open('config.json'))
+config = json.load(open('../config.json'))
 client = Client(config["binance-key"], config["binance-secret"])
 tradewith = config["trade-market"]
 
 
 def fill_database():
     try:
-        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "1 Jun, 2019")
+        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "28 Jun, 2019")
     except BinanceAPIException as ex:
         print (ex)
     
