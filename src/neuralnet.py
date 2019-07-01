@@ -12,7 +12,9 @@ import database
 
 # Importing dataset
 def load_data():
-        dataset = pd.read_sql_query("SELECT * FROM prices ORDER BY timestamp DESC LIMIT 50", database.get_conn())
+        dataset = pd.read_sql_query("SELECT * FROM prices ORDER BY timestamp DESC LIMIT 1000", database.get_conn())
+
+        timestamps = dataset['timestamp'].tolist()
         dataset['H-L'] = dataset['high'] - dataset['low']
         dataset['O-C'] = dataset['close'] - dataset['open']
         dataset['3day MA'] = dataset['close'].shift(1).rolling(window = 3).mean()
@@ -23,14 +25,14 @@ def load_data():
         dataset['MACD'] = talib.MACD(dataset['close'].values, fastperiod=12, slowperiod=26, signalperiod=9)[0]
         dataset['Williams %R'] = talib.WILLR(dataset['high'].values, dataset['low'].values, dataset['close'].values, 7)
         dataset['Price_Rise'] = np.where(dataset['close'].shift(-1) > dataset['close'], 1, 0)
-        print(dataset)
-        data = dataset.iloc[:, 4:]
 
-        return data, dataset
+        return dataset, timestamps
         
 
 
-def run(data, dataset):
+def run(dataset, timestamps):
+
+        data = dataset.iloc[:, 4:]
         # Dimensions of data
         n = data.shape[0]
         p = data.shape[1]
@@ -45,6 +47,7 @@ def run(data, dataset):
         data_train = data[np.arange(train_start, train_end), :]
         data_test = data[np.arange(test_start, test_end), :]
 
+        print(data_test[0])
         # Scale data
         scaler = MinMaxScaler(feature_range=(-1, 1))
         scaler.fit(data_train)
@@ -112,8 +115,8 @@ def run(data, dataset):
         net.run(tf.global_variables_initializer())
 
         # Fitting the neural network
-        batch_size = 100
-        epochs = 10
+        batch_size = 1000
+        epochs = 110
         # Run
         for e in range(epochs):
                 # Shuffle training data
@@ -133,27 +136,12 @@ def run(data, dataset):
         #Predicting the movement of the stock
         pred = net.run(out, feed_dict={X: X_test})
         y_pred = pred[0]
-        y_pred = pred[0] > 0.5
 
-        dataset['y_pred'] = np.NaN
-        dataset.iloc[(len(dataset) - len(y_pred)):,-1:] = y_pred
-        trade_dataset = dataset.dropna()
 
-        #Computing Strategy Returns
-        trade_dataset['Tomorrows Returns'] = 0.
-        trade_dataset['Tomorrows Returns'] = np.log(trade_dataset['close']/trade_dataset['close'].shift(1))
-        trade_dataset['Tomorrows Returns'] = trade_dataset['Tomorrows Returns'].shift(-1)
-
-        trade_dataset['Strategy Returns'] = 0.
-        trade_dataset['Strategy Returns'] = np.where(trade_dataset['y_pred'] == True, 
-                trade_dataset['Tomorrows Returns'], - trade_dataset['Tomorrows Returns'])
-
-        trade_dataset['Cumulative Market Returns'] = np.cumsum(trade_dataset['Tomorrows Returns'])
-        trade_dataset['Cumulative Strategy Returns'] = np.cumsum(trade_dataset['Strategy Returns'])
 
         #Plotting the graph of returns
         plt.figure(figsize=(10,5))
-        plt.plot(trade_dataset['Cumulative Market Returns'], color='r', label='Market Returns')
-        plt.plot(trade_dataset['Cumulative Strategy Returns'], color='g', label='Strategy Returns')
+        plt.plot([i for i in range(len(data_test[:,0]))], data_test[:,0], color='r')
+        plt.plot([i for i in range(len(y_pred))], y_pred, color='g')
         plt.legend()
         plt.show()

@@ -16,7 +16,9 @@ if __name__ == "__main__":
     while True:
         binance_api.get_data()
         data = database.get_data_last(n_data)
-        ndata, ndataset = neuralnet.load_data()
-        neuralnet.run(ndata, ndataset)
+        ndataset, timestamps = neuralnet.load_data()
+        neuralnet.run(ndataset, timestamps)
+
+
         time.sleep(20)
 
