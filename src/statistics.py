@@ -4,6 +4,7 @@ import main
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
+import twitter_api
 import talib
 import random
 import sqlite3
@@ -24,7 +25,6 @@ def calculate():
         dataset['MACD'] = talib.MACD(dataset['close'].values, fastperiod=12, slowperiod=26, signalperiod=9)[0]
         dataset['Williams %R'] = talib.WILLR(dataset['high'].values, dataset['low'].values, dataset['close'].values, 7)
         dataset['Price_Rise'] = np.where(dataset['close'].shift(-1) > dataset['close'], 1, 0)
-        print(dataset.iloc[-1:])
         data = dataset.iloc[:, 4:]
         xlen = data.shape[0]
         ylen = data.shape[1]
@@ -33,11 +33,18 @@ def calculate():
         scaler = MinMaxScaler(feature_range=(-1, 1))
         scaler.fit(data_train)
         data_train = scaler.transform(data_train)
-        print(data_train)
+
         if not first:
-                database.insert_predictions(dataset['timestamp'].iloc[0], data_train[0][1], data_train[0][2], data_train[0][3], data_train[0][4], data_train[0][5], data_train[0][6], data_train[0][7])
+                database.insert_predictions(dataset['timestamp'].iloc[0], data_train[0][1], data_train[0][2],
+                 data_train[0][3], data_train[0][4], data_train[0][5], data_train[0][6],
+                  data_train[0][7], data_train[0][8], data_train[0][9], data_train[0][10],
+                   data_train[0][11], twitter_api.get_sentiment()[0], twitter_api.get_sentiment()[1])
         else:
                 for i in range(50):
-                        database.insert_predictions(dataset['timestamp'].iloc[i], data_train[i][1], data_train[i][2], data_train[i][3], data_train[i][4], data_train[i][5], data_train[i][6], data_train[i][7])
+                        database.insert_predictions(dataset['timestamp'].iloc[i], data_train[i][1],
+                         data_train[i][2], data_train[i][3], data_train[i][4], data_train[i][5], 
+                         data_train[i][6], data_train[i][7], data_train[i][8], data_train[i][9], 
+                         data_train[i][10], data_train[i][11], 0.0, 0.0)
+
                 first = False
         return dataset['timestamp'].iloc[0]

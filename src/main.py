@@ -4,7 +4,7 @@ import database
 import stats
 import time
 import statistics
-import graph
+
 
 
 timeframe = 300
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     while True:
         binance_api.get_data()
         stamp = statistics.calculate()
-
-
+        
+        print("Timestamp " + str(stamp) + " added ...")
         time.sleep(60)
 
