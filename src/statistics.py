@@ -37,8 +37,8 @@ def calculate():
         if not first:
                 database.insert_predictions(dataset['timestamp'].iloc[0], data_train[0][1], data_train[0][2],
                  data_train[0][3], data_train[0][4], data_train[0][5], data_train[0][6],
-                  data_train[0][7], data_train[0][8], data_train[0][9], data_train[0][10],
-                   data_train[0][11], twitter_api.get_sentiment()[0], twitter_api.get_sentiment()[1])
+                 data_train[0][7], data_train[0][8], data_train[0][9], data_train[0][10],
+                 data_train[0][11], twitter_api.get_sentiment()[0], twitter_api.get_sentiment()[1])
         else:
                 for i in range(50):
                         database.insert_predictions(dataset['timestamp'].iloc[i], data_train[i][1],
@@ -47,4 +47,4 @@ def calculate():
                          data_train[i][10], data_train[i][11], 0.0, 0.0)
 
                 first = False
-        return dataset['timestamp'].iloc[0]
+        return dataset.iloc[49]
