@@ -1,6 +1,7 @@
 from pandas import Series
+from pandas import DataFrame
 from pandas import concat
-from pandas import read_csv
+from pandas import read_sql_query
 from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
@@ -11,6 +12,7 @@ from math import sqrt
 import matplotlib
 import numpy
 from numpy import concatenate
+import database
  
 # date-time parsing function for loading the dataset
 def parser(x):
@@ -85,7 +87,7 @@ def update_model(model, train, batch_size, updates):
 		model.fit(X, y, nb_epoch=1, batch_size=batch_size, verbose=0, shuffle=False)
 		model.reset_states()
  
-# run a repeated experiment
+# run a repeated experimen
 def experiment(repeats, series, updates):
 	# transform data to be stationary
 	raw_values = series.values
@@ -129,7 +131,8 @@ def experiment(repeats, series, updates):
 # execute the experiment
 def run():
 	# load dataset
-	series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+	series = read_sql_query("SELECT close FROM prices DESC LIMIT 50", database.get_conn())
+	print(series)
 	# experiment
 	repeats = 10
 	results = DataFrame()
@@ -141,5 +144,3 @@ def run():
 	# save results
 	results.to_csv('experiment_update_2.csv', index=False)
  
- # entry point
-run()
