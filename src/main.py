@@ -3,22 +3,20 @@ import twitter_api
 import database
 import stats
 import time
-import neuralnet
+import statistics
+import graph
 
 
 timeframe = 300
-n_data = 40
-
+n_data    = 40
 
 if __name__ == "__main__":
     binance_api.fill_database()
     
     while True:
         binance_api.get_data()
-        data = database.get_data_last(n_data)
-        ndataset, timestamps = neuralnet.load_data()
-        neuralnet.run(ndataset, timestamps)
+        stamp = statistics.calculate()
 
 
-        time.sleep(20)
+        time.sleep(60)
 

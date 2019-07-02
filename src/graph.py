@@ -1,75 +1,100 @@
-
-# bokeh serve --show graph.py
-from bokeh.plotting import figure, curdoc
-from bokeh.driving import linear
-import random
+import numpy as np
+np.random.seed(1)
+from bokeh.layouts import row, column, gridplot
+from bokeh.models import ColumnDataSource, Slider, Select
+from bokeh.plotting import curdoc, figure
+from bokeh.driving import count
+from bokeh.layouts import row, column, gridplot
+from bokeh.models import ColumnDataSource, Slider, Select
+from bokeh.plotting import curdoc, figure
+from bokeh.driving import count
 import database
+import math
+import binance_api as binapi
 
-p = figure(plot_width=1600, plot_height=800)
-r1 = p.line([], [], color="firebrick", line_width=2)
-r2 = p.line([], [], color="navy", line_width=2)
-r3 = p.line([], [], color="green", line_width=2)
-r4 = p.line([], [], color="blue", line_width=2)
-r5 = p.line([], [], color="yellow", line_width=2)
-r6 = p.line([], [], color="red", line_width=2)
-r7 = p.line([], [], color="black", line_width=2)
+#bokeh serve --show graph.py
 
-ds1 = r1.data_source
-ds2 = r2.data_source
-ds3 = r3.data_source
-ds4 = r4.data_source
-ds5 = r5.data_source
-ds6 = r6.data_source
-ds7 = r7.data_source
+MA12, MA26, EMA12, EMA26 = '12-tick Moving Avg', '26-tick Moving Avg', '12-tick EMA', '26-tick EMA'
 
-data = database.get_predictions(1)
-print(data)
+source = ColumnDataSource(dict(
+    time=[], average=[], low=[], high=[], open=[], close=[],
+    ma=[], macd=[], macd9=[], macdh=[], color=[]
+))
 
-@linear()
-def update(step):
-    data = database.get_predictions(1)
+p = figure(plot_height=500, tools="xpan,xwheel_zoom,xbox_zoom,reset", x_axis_type=None, y_axis_location="right")
+p.x_range.follow = "end"
+p.x_range.follow_interval = 100
+p.x_range.range_padding = 0
+
+p.line(x='time', y='average', alpha=0.2, line_width=3, color='navy', source=source)
+p.line(x='time', y='ma', alpha=0.8, line_width=2, color='orange', source=source)
+p.segment(x0='time', y0='low', x1='time', y1='high', line_width=2, color='black', source=source)
+p.segment(x0='time', y0='open', x1='time', y1='close', line_width=8, color='color', source=source)
+
+p2 = figure(plot_height=250, x_range=p.x_range, tools="xpan,xwheel_zoom,xbox_zoom,reset", y_axis_location="right")
+p2.line(x='time', y='macd', color='red', source=source)
+p2.line(x='time', y='macd9', color='blue', source=source)
+p2.segment(x0='time', y0=0, x1='time', y1='macdh', line_width=6, color='black', alpha=0.5, source=source)
+
+mean = Slider(title="mean", value=0, start=-0.01, end=0.01, step=0.001)
+stddev = Slider(title="stddev", value=0.04, start=0.01, end=0.1, step=0.01)
+mavg = Select(value=MA12, options=[MA12, MA26, EMA12, EMA26])
+
+def get_prices(t):
+    
+    data = binapi.get_data()
     print(data)
-    ds1.data['x'].append(data[0])
-    ds1.data['y'].append(data[1])
-    ds2.data['x'].append(data[0])
-    ds2.data['y'].append(data[2])
-    ds3.data['x'].append(data[0])
-    ds3.data['y'].append(data[3])
-    ds4.data['x'].append(data[0])
-    ds4.data['y'].append(data[4])
-    ds5.data['x'].append(data[0])
-    ds5.data['y'].append(data[5])
-    ds6.data['x'].append(data[0])
-    ds6.data['y'].append(data[6])
-    ds7.data['x'].append(data[0])
-    ds7.data['y'].append(data[7])
+    return data[1], data[2], data[3], data[4], data[0]
 
+def _moving_avg(prices, days=10):
+    if len(prices) < days: return [100]
+    return np.convolve(prices[-days:], np.ones(days, dtype=float), mode="valid") / days
 
+def _ema(prices, days=10):
+    if len(prices) < days or days < 2: return [prices[-1]]
+    a = 2.0 / (days+1)
+    kernel = np.ones(days, dtype=float)
+    kernel[1:] = 1 - a
+    kernel = a * np.cumprod(kernel)
+    # The 0.8647 normalizes out that we stop the EMA after a finite number of terms
+    return np.convolve(prices[-days:], kernel, mode="valid") / (0.8647)
 
-    if len(ds1.data1['x']) > 100:
-        ds1.data['x'].pop(0)
-        ds1.data['y'].pop(0)
-        ds2.data['x'].pop(0)
-        ds2.data['y'].pop(0)
-        ds3.data['x'].pop(0)
-        ds3.data['y'].pop(0)
-        ds4.data['x'].pop(0)
-        ds4.data['y'].pop(0)
-        ds5.data['x'].pop(0)
-        ds5.data['y'].pop(0)
-        ds6.data['x'].pop(0)
-        ds6.data['y'].pop(0)
-        ds7.data['x'].pop(0)
-        ds7.data['y'].pop(0)
+@count()
+def update(t):
+    open, high, low, close, average = get_prices(t)
+    color = "green" if open < close else "red"
 
-    ds1.trigger('data', ds1.data, ds1.data)
-    ds2.trigger('data', ds2.data, ds2.data)
-    ds3.trigger('data', ds3.data, ds3.data)
-    ds4.trigger('data', ds4.data, ds4.data)
-    ds5.trigger('data', ds5.data, ds5.data)
-    ds6.trigger('data', ds6.data, ds6.data)
-    ds7.trigger('data', ds7.data, ds7.data)
+    new_data = dict(
+        time=[t],
+        open=[open],
+        high=[high],
+        low=[low],
+        close=[close],
+        average=[average],
+        color=[color],
+    )
 
+    close = source.data['close'] + [close]
+    ma12 = _moving_avg(close[-12:], 12)[0]
+    ma26 = _moving_avg(close[-26:], 26)[0]
+    ema12 = _ema(close[-12:], 12)[0]
+    ema26 = _ema(close[-26:], 26)[0]
 
-curdoc().add_root(p)
-curdoc().add_periodic_callback(update, 500)
+    if   mavg.value == MA12:  new_data['ma'] = [ma12]
+    elif mavg.value == MA26:  new_data['ma'] = [ma26]
+    elif mavg.value == EMA12: new_data['ma'] = [ema12]
+    elif mavg.value == EMA26: new_data['ma'] = [ema26]
+
+    macd = ema12 - ema26
+    new_data['macd'] = [macd]
+
+    macd_series = source.data['macd'] + [macd]
+    macd9 = _ema(macd_series[-26:], 9)[0]
+    new_data['macd9'] = [macd9]
+    new_data['macdh'] = [macd - macd9]
+
+    source.stream(new_data, 300)
+
+curdoc().add_root(column(row(mean, stddev, mavg), gridplot([[p], [p2]], toolbar_location="left", plot_width=1200)))
+curdoc().add_periodic_callback(update, 50)
+curdoc().title = "OHLC"

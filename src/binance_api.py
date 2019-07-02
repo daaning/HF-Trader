@@ -13,7 +13,7 @@ tradewith = config["trade-market"]
 
 def fill_database():
     try:
-        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "30 Jun, 2019")
+        klines = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_1MINUTE, "1 Jul, 2019")
     except BinanceAPIException as ex:
         print (ex)
     
@@ -25,7 +25,7 @@ def fill_database():
 
 def get_data():
     try:
-        kline = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_5MINUTE, "1 hour ago UTC")
+        kline = client.get_historical_klines(tradewith, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
     except BinanceAPIException as ex:
         print (ex)
     timestamp, opens, high, low, close, volume  = kline[len(kline)-1][0], kline[len(kline)-1][1], kline[len(kline)-1][2], kline[len(kline)-1][3], kline[len(kline)-1][4], kline[len(kline)-1][5] 
