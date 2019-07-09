@@ -2,17 +2,17 @@ import tweepy
 from textblob import TextBlob
 import json
 import numpy as np
-import time 
-import json 
+import time
+import json
 
-config = json.load(open('/home/daan/Desktop/daan/LF-trader/config.json'))
+config = json.load(open('../config.json'))
 
 
 twitter_key = config['twitter_key']
 twitter_secret = config['twitter_secret']
 twitter_tokenkey = config['twitter_tokenkey']
 twitter_tokensecret = config['twitter_tokensecret']
-subject = config["trade-market"][3:]
+subject = config["trade_market"][3:]
 print("trading in " + subject)
 
 
@@ -26,6 +26,8 @@ except:
 
 polarr = []
 sentarr = []
+
+
 def get_sentiment():
     try:
         public_tweets = api.search(subject, "en")
@@ -40,4 +42,3 @@ def get_sentiment():
         sentarr.append(sentiment[1])
 
     return np.average(polarr), np.average(sentarr)
-
