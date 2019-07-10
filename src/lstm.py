@@ -99,7 +99,7 @@ def forecast_lstm(model, batch_size, X):
 
 
 def update_model(model, train, batch_size, updates):
-    X, y = train[:, 0:-1], train[:, -1]
+    X, y = train[:, 0: -1], train[:, -1]
     X = X.reshape(X.shape[0], 1, X.shape[1])
     for i in range(updates):
         model.fit(X, y, nb_epoch=1, batch_size=batch_size,
@@ -133,7 +133,8 @@ def experiment(repeats, series):
             # invert scaling
             yhat = invert_scale(scaler, X, yhat)
             # invert differencing
-            yhat = inverse_difference(raw_values, yhat, len(test_scaled)+1-i)
+            yhat = inverse_difference(
+                raw_values, yhat, len(test_scaled) + 1 - i)
             # store forecast
             predictions.append(yhat)
             # add to training set
@@ -141,7 +142,7 @@ def experiment(repeats, series):
                 (train_copy, test_scaled[i, :].reshape(1, -1)))
         # report performance
         rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
-        print('%d) Test RMSE: %.3f' % (r+1, rmse))
+        print('%d) Test RMSE: %.3f' % (r + 1, rmse))
         error_scores.append(rmse)
     return error_scores
 
