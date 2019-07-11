@@ -14,16 +14,14 @@ import numpy
 from numpy import concatenate
 import database
 
-# date-time parsing function for loading the dataset
-
 
 def parser(x):
+    # date-time parsing function for loading the dataset
     return datetime.strptime('190'+x, '%Y-%m')
-
-# frame a sequence as a supervised learning problem
 
 
 def timeseries_to_supervised(data, lag=1):
+    # frame a sequence as a supervised learning problem
     df = DataFrame(data)
     columns = [df.shift(i) for i in range(1, lag+1)]
     columns.append(df)
@@ -31,26 +29,23 @@ def timeseries_to_supervised(data, lag=1):
     df = df.drop(0)
     return df
 
-# create a differenced series
-
 
 def difference(dataset, interval=1):
+    # create a differenced series
     diff = list()
     for i in range(interval, len(dataset)):
         value = dataset[i] - dataset[i - interval]
         diff.append(value)
     return Series(diff)
 
-# invert differenced value
-
 
 def inverse_difference(history, yhat, interval=1):
+    # invert differenced value
     return yhat + history[-interval]
-
-# scale train and test data to [-1, 1]
 
 
 def scale(train, test):
+    # scale train and test data to [-1, 1]
     # fit scaler
     scaler = MinMaxScaler(feature_range=(-1, 1))
     scaler = scaler.fit(train)
@@ -62,21 +57,19 @@ def scale(train, test):
     test_scaled = scaler.transform(test)
     return scaler, train_scaled, test_scaled
 
-# inverse scaling for a forecasted value
-
 
 def invert_scale(scaler, X, yhat):
+    # inverse scaling for a forecasted value
     new_row = [x for x in X] + [yhat]
     array = numpy.array(new_row)
     array = array.reshape(1, len(array))
     inverted = scaler.inverse_transform(array)
     return inverted[0, -1]
 
-# fit an LSTM network to training data
-
 
 def fit_lstm(train, batch_size, nb_epoch, neurons):
-    X, y = train[:, 0:-1], train[:, -1]
+    # fit an LSTM network to training data
+    X, y = train[:, 0: -1], train[:, -1]
     X = X.reshape(X.shape[0], 1, X.shape[1])
     model = Sequential()
     model.add(LSTM(neurons, batch_input_shape=(
@@ -89,10 +82,9 @@ def fit_lstm(train, batch_size, nb_epoch, neurons):
         model.reset_states()
     return model
 
-# make a one-step forecast
-
 
 def forecast_lstm(model, batch_size, X):
+    # make a one-step forecast
     X = X.reshape(1, 1, len(X))
     yhat = model.predict(X, batch_size=batch_size)
     return yhat[0, 0]
@@ -115,7 +107,7 @@ def experiment(repeats, series):
     supervised = timeseries_to_supervised(diff_values, 1)
     supervised_values = supervised.values
     # split data into train and test-sets
-    train, test = supervised_values[0:-12], supervised_values[-12:]
+    train, test = supervised_values[0: -12], supervised_values[-12:]
     # transform the scale of the data
     scaler, train_scaled, test_scaled = scale(train, test)
     # run experiment
@@ -134,7 +126,7 @@ def experiment(repeats, series):
             yhat = invert_scale(scaler, X, yhat)
             # invert differencing
             yhat = inverse_difference(
-                raw_values, yhat, len(test_scaled) + 1 - i)
+                raw_values, yhat, len(test_scaled) - i + 1)
             # store forecast
             predictions.append(yhat)
             # add to training set
@@ -146,20 +138,13 @@ def experiment(repeats, series):
         error_scores.append(rmse)
     return error_scores
 
-# execute the experiment
-
 
 def run():
-    # load dataset
     series = read_sql_query(
         "SELECT close FROM prices DESC LIMIT 50", database.get_conn())
     print(series)
-    # experiment
-    repeats = 10
     results = DataFrame()
-    # run experiment
-    updates = 2
-    results['results'] = experiment(repeats, series, updates)
+    results['results'] = experiment(repeats=1, series, updates=2)
     print(results.describe())
     print(results)
     results.to_csv('experiment_update_2.csv', index=False)
